@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  redis:
+    image: redis:6.2.6
+  worker:
+    build:
+      context: .
+    volumes:
+      - './:/code'
+    depends_on:
+      - redis
+    command: dramatiq tasks
+  task_sender:
+    build:
+      context: .
+    volumes:
+      - './:/code'
+    depends_on:
+      - worker
+    command: python ./main.py
